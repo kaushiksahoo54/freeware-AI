@@ -2,15 +2,34 @@ import yfinance as yf
 from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
 import pandas as pd
+import json
 
-#real_time data for stock
-def get_realtime_data(stock_symbol):
+with open("./config.json") as f:
+    config = json.load(f)
+num_months = config["num_months"]
+ 
+
+def get_realtime_data(stock_symbol: str):
+    """
+    Description of get_realtime_data
+
+    Args:
+        stock_symbol (str): name of the stock
+
+    """
     stock = yf.Ticker(stock_symbol)
     real_time_data = stock.history(period="1d", interval="1m") 
     return real_time_data.tail()  
 
-#3month data for stock
-def get_historical_data(stock_symbol, months=3):
+def get_historical_data(stock_symbol: str, months=num_months):
+    """
+    Description of get_historical_data
+
+    Args:
+        stock_symbol (str): name of the stock
+        months (int): duration of past lookup on stock trends
+
+    """
     stock = yf.Ticker(stock_symbol)
     end_date = datetime.now()
     start_date = end_date - timedelta(days=months * 30)  
@@ -19,11 +38,9 @@ def get_historical_data(stock_symbol, months=3):
 
 stock_symbol = 'TCS.NS' #USe '.NS' for nifty and '.BO' for sensex
 
-# Fetch real-time data
 real_time_data = get_realtime_data(stock_symbol)
 print("Real-Time Data:\n", real_time_data)
 
-# Fetch 3-month historical data
 historical_data = get_historical_data(stock_symbol).reset_index()
 print("\nHistorical Data (3 Months):\n", historical_data)
 
