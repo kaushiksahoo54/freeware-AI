@@ -1,2 +1,7 @@
 {"num_months": 12,
-"plotter": "Active"}
+"plotter": "Active",
+"user": "admin",
+"password": "freeware-dev",
+"host": "104.154.129.2",
+"port": "3306",
+"database": "mysql"}
