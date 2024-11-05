@@ -7,7 +7,7 @@ import json
 with open("./config.json") as f:
     config = json.load(f)
 num_months = config["num_months"]
-stock_symbol = 'TCS.NS' 
+stock_symbol = config["stock_symbol"]
 #USe '.NS' for nifty and '.BO' for sensex
 
 def get_realtime_data(stock_symbol: str):
@@ -62,24 +62,24 @@ def plotter(diary: pd.DataFrame):
         plt.tight_layout()
         plt.show()
 
+def main():
+    real_time_data = get_realtime_data(stock_symbol)
+    print("Real-Time Data:\n", real_time_data)
 
-real_time_data = get_realtime_data(stock_symbol)
-print("Real-Time Data:\n", real_time_data)
+    historical_data = get_historical_data(stock_symbol).reset_index()
+    print("\nHistorical Data (3 Months):\n", historical_data)
 
-historical_data = get_historical_data(stock_symbol).reset_index()
-print("\nHistorical Data (3 Months):\n", historical_data)
+    historical_data['Date'] = pd.to_datetime(historical_data['Date'])
+    historical_data.set_index('Date', inplace=True)
+    historical_data['High_Low_STD'] = historical_data[['High', 'Low']].std(axis=1)
+    historical_data['SMA_20'] = historical_data['Close'].rolling(window=20).mean()
+    # Calculate the 20-day moving average of the Close price
 
-historical_data['Date'] = pd.to_datetime(historical_data['Date'])
-historical_data.set_index('Date', inplace=True)
-historical_data['High_Low_STD'] = historical_data[['High', 'Low']].std(axis=1)
-historical_data['SMA_20'] = historical_data['Close'].rolling(window=20).mean()
-# Calculate the 20-day moving average of the Close price
+    historical_data['STD_20'] = historical_data['Close'].rolling(window=20).std()
+    # Calculate the standard deviation of the Close price over a 20-day window
 
-historical_data['STD_20'] = historical_data['Close'].rolling(window=20).std()
-# Calculate the standard deviation of the Close price over a 20-day window
-
-historical_data['Upper_Band'] = historical_data['SMA_20'] + (historical_data['STD_20'] * 2)
-historical_data['Lower_Band'] = historical_data['SMA_20'] - (historical_data['STD_20'] * 2)
-# Calculate the Bollinger Bands
-if str.lower(config["plotter"]) == 'active':
-    plotter(historical_data)
+    historical_data['Upper_Band'] = historical_data['SMA_20'] + (historical_data['STD_20'] * 2)
+    historical_data['Lower_Band'] = historical_data['SMA_20'] - (historical_data['STD_20'] * 2)
+    # Calculate the Bollinger Bands
+    if str.lower(config["plotter"]) == 'active':
+        plotter(historical_data)
