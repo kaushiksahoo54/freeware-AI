@@ -25,17 +25,18 @@ jobs:
           echo "$CLIENT_CERT" | base64 -d > client-cert.pem
           echo "$SERVER_CA" | base64 -d > server-ca-2.pem
 
-      # Connect to PostgreSQL using the decoded PEM files
-      - name: Connect to PostgreSQL
+      # Connect to MySQL using the decoded PEM files
+      - name: Connect to MySQL
         env:
-          PGSSLMODE: verify-full
-          PGSSLROOTCERT: ./server-ca-2.pem
-          PGSSLCERT: ./client-cert.pem
-          PGSSLKEY: ./client-key.pem
+          MYSQL_HOST: 104.154.129.2
+          MYSQL_USER: root
+          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
         run: |
-          psql "host=<your-host> dbname=<your-db> user=<your-user> sslmode=$PGSSLMODE sslrootcert=$PGSSLROOTCERT sslcert=$PGSSLCERT sslkey=$PGSSLKEY"
+          mysql -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" -h "$MYSQL_HOST" \
+            --ssl-ca=server-ca-2.pem --ssl-cert=client-cert.pem --ssl-key=client-key.pem \
+            -e "SHOW DATABASES;"
 
       # Clean up PEM files after use
       - name: Clean up PEM files
         run: |
-          rm client-key.pem client-cert.pem server-ca-2.pem
+          rm client-key.pem client-cert.pem server-ca.pem
