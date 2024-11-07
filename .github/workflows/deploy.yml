@@ -33,4 +33,4 @@ jobs:
           SERVER_CA: ${{ secrets.SERVER_CA }}
         run: |
           python ./tests/unit/test_sql_connection.py
-# test 1
+# test 2
