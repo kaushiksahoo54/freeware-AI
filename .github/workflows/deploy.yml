@@ -40,3 +40,5 @@ jobs:
       - name: Clean up PEM files
         run: |
           rm client-key.pem client-cert.pem server-ca-2.pem
+
+      # try connect 1
