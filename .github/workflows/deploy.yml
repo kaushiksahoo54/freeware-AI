@@ -1,44 +1,35 @@
-name: Deploy
+name: Run Test
 
-on:
+on: 
   push:
-    branches:
-      - main
+    branches: 
+      - bug-fix-mysql-connection
+  pull_request:
+    branches: 
+      - bug-fix-mysql-connection
 
 jobs:
-  deploy:
+  test:
     runs-on: ubuntu-latest
-
+    
     steps:
-      # Checkout the repository
-      - name: Check out the repository
+      - name: Checkout code
         uses: actions/checkout@v2
 
-      # Decode PEM files from Base64 secrets and create .pem files
-      - name: Create PEM files from secrets
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run SQL Connection Test
         env:
           CLIENT_KEY: ${{ secrets.CLIENT_KEY }}
           CLIENT_CERT: ${{ secrets.CLIENT_CERT }}
           SERVER_CA: ${{ secrets.SERVER_CA }}
         run: |
-          echo "$CLIENT_KEY" | base64 -d > client-key.pem
-          echo "$CLIENT_CERT" | base64 -d > client-cert.pem
-          echo "$SERVER_CA" | base64 -d > server-ca-2.pem
-
-      # Connect to MySQL using the decoded PEM files
-      - name: Connect to MySQL
-        env:
-          MYSQL_HOST: 104.154.129.2
-          MYSQL_USER: root
-          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
-        run: |
-          mysql -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" -h "$MYSQL_HOST" \
-            --ssl-ca=server-ca-2.pem --ssl-cert=client-cert.pem --ssl-key=client-key.pem \
-            -e "SHOW DATABASES;"
-
-      # Clean up PEM files after use
-      - name: Clean up PEM files
-        run: |
-          rm client-key.pem client-cert.pem server-ca-2.pem
-
-      # try connect 2
+          python ./tests/unit/test_sql_connection.py
