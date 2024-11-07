@@ -39,4 +39,4 @@ jobs:
       # Clean up PEM files after use
       - name: Clean up PEM files
         run: |
-          rm client-key.pem client-cert.pem server-ca.pem
+          rm client-key.pem client-cert.pem server-ca-2.pem
