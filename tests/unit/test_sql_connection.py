@@ -10,9 +10,9 @@ config = {
     'host': global_config["host"],
     'port': global_config["port"],
     'database': global_config["database"],
-    'ssl_ca': os.environ('server-ca-2.pem'),
-    'ssl_cert': os.environ('client-cert.pem'),
-    'ssl_key': os.environ('client-key.pem') 
+    'ssl_ca': os.environ['SERVER_CA'],
+    'ssl_cert': os.environ['CLIENT_CERT'],
+    'ssl_key': os.environ['CLIENT_KEY'] 
 }
 
 try:
