@@ -1,0 +1,41 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository
+      - name: Check out the repository
+        uses: actions/checkout@v2
+
+      # Decode PEM files from Base64 secrets and create .pem files
+      - name: Create PEM files from secrets
+        env:
+          CLIENT_KEY: ${{ secrets.CLIENT_KEY }}
+          CLIENT_CERT: ${{ secrets.CLIENT_CERT }}
+          SERVER_CA: ${{ secrets.SERVER_CA }}
+        run: |
+          echo "$CLIENT_KEY" | base64 -d > client-key.pem
+          echo "$CLIENT_CERT" | base64 -d > client-cert.pem
+          echo "$SERVER_CA" | base64 -d > server-ca-2.pem
+
+      # Connect to PostgreSQL using the decoded PEM files
+      - name: Connect to PostgreSQL
+        env:
+          PGSSLMODE: verify-full
+          PGSSLROOTCERT: ./server-ca-2.pem
+          PGSSLCERT: ./client-cert.pem
+          PGSSLKEY: ./client-key.pem
+        run: |
+          psql "host=<your-host> dbname=<your-db> user=<your-user> sslmode=$PGSSLMODE sslrootcert=$PGSSLROOTCERT sslcert=$PGSSLCERT sslkey=$PGSSLKEY"
+
+      # Clean up PEM files after use
+      - name: Clean up PEM files
+        run: |
+          rm client-key.pem client-cert.pem server-ca-2.pem
