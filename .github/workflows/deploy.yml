@@ -33,5 +33,7 @@ jobs:
           SERVER_CA: ${{ secrets.SERVER_CA }}
         run: |
           python ./tests/unit/test_sql_connection.py
+      - name: Run system health check
+        run: |
           pytest -v
 # test 5
