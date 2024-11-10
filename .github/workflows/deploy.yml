@@ -6,7 +6,7 @@ on:
       - kaushik-dev,main
   pull_request:
     branches: 
-      - main
+      - kaushik-dev,main
 
 jobs:
   test:
@@ -34,4 +34,4 @@ jobs:
         run: |
           python ./tests/unit/test_sql_connection.py
           pytest -v
-# test 4
+# test 5
