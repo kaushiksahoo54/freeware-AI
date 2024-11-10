@@ -32,7 +32,7 @@ jobs:
           CLIENT_CERT: ${{ secrets.CLIENT_CERT }}
           SERVER_CA: ${{ secrets.SERVER_CA }}
         run: |
-          python ./tests/unit/test_sql_connection.py
+          python ./tests/unit/sql_connection.py
       - name: Run system health check
         run: |
           pytest -v
