@@ -48,6 +48,10 @@ def plotter(diary: pd.DataFrame):
         """
         plt.figure(figsize=(12, 6))
         plt.plot(diary.index, diary['Close'], label='Close', color='blue')
+        diary['STD_20'] = diary['Close'].rolling(window=20).std()
+        diary['SMA_20'] = diary['Close'].rolling(window=20).mean()
+        diary['Upper_Band'] = diary['SMA_20'] + (diary['STD_20'] * 2)
+        diary['Lower_Band'] = diary['SMA_20'] - (diary['STD_20'] * 2)
         plt.plot(diary.index, diary['SMA_20'], label='20-Day SMA', color='orange')
         plt.plot(diary.index, diary['Upper_Band'], label='Upper Bollinger Band', color='green', linestyle='--')
         plt.plot(diary.index, diary['Lower_Band'], label='Lower Bollinger Band', color='red', linestyle='--')
@@ -72,14 +76,14 @@ def main():
     historical_data['Date'] = pd.to_datetime(historical_data['Date'])
     historical_data.set_index('Date', inplace=True)
     historical_data['High_Low_STD'] = historical_data[['High', 'Low']].std(axis=1)
-    historical_data['SMA_20'] = historical_data['Close'].rolling(window=20).mean()
+    #historical_data['SMA_20'] = historical_data['Close'].rolling(window=20).mean()
     # Calculate the 20-day moving average of the Close price
 
-    historical_data['STD_20'] = historical_data['Close'].rolling(window=20).std()
+    #historical_data['STD_20'] = historical_data['Close'].rolling(window=20).std()
     # Calculate the standard deviation of the Close price over a 20-day window
 
-    historical_data['Upper_Band'] = historical_data['SMA_20'] + (historical_data['STD_20'] * 2)
-    historical_data['Lower_Band'] = historical_data['SMA_20'] - (historical_data['STD_20'] * 2)
+    #historical_data['Upper_Band'] = historical_data['SMA_20'] + (historical_data['STD_20'] * 2)
+    #historical_data['Lower_Band'] = historical_data['SMA_20'] - (historical_data['STD_20'] * 2)
     # Calculate the Bollinger Bands
     if str.lower(config["plotter"]) == 'active':
         plotter(historical_data)

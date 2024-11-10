@@ -3,7 +3,7 @@ name: Run Test
 on: 
   push:
     branches: 
-      - main
+      - kaushik-dev,main
   pull_request:
     branches: 
       - main
@@ -33,4 +33,5 @@ jobs:
           SERVER_CA: ${{ secrets.SERVER_CA }}
         run: |
           python ./tests/unit/test_sql_connection.py
+          pytest -v
 # test 4

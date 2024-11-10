@@ -1,10 +1,8 @@
 import pytest
-
-import pytest
 from unittest.mock import patch, MagicMock
 import pandas as pd
 import sys
-sys.path.append("././")
+sys.path.append(".")  # or ".." based on your folder structure
 from utils.performance import get_realtime_data, get_historical_data, plotter
 
 # Mock data for testing
@@ -29,36 +27,24 @@ mock_historical_data = pd.DataFrame({
 def sample_stock_symbol():
     return "TCS.NS"
 
-@patch("your_module.yf.Ticker")
+@patch("utils.performance.yf.Ticker")
 def test_get_realtime_data(mock_ticker, sample_stock_symbol):
-    """
-    Description of test_get_realtime_data
-
-    Args:
-        mock_ticker (undefined):
-        sample_stock_symbol (undefined):
-
-    """
-    
     mock_ticker.return_value.history.return_value = mock_realtime_data
-    
     result = get_realtime_data(sample_stock_symbol)
-    
     assert not result.empty, "Returned data should not be empty"
     assert result.equals(mock_realtime_data.tail()), "Data returned does not match expected real-time data"
 
-
-@patch("your_module.yf.Ticker")
+@patch("utils.performance.yf.Ticker")
 def test_get_historical_data(mock_ticker, sample_stock_symbol):
     mock_ticker.return_value.history.return_value = mock_historical_data
     result = get_historical_data(sample_stock_symbol, months=3)
     assert not result.empty, "Returned data should not be empty"
     assert result.equals(mock_historical_data), "Data returned does not match expected historical data"
 
-@patch("your_module.plt.show")
+@patch("utils.performance.plt.show")
 def test_plotter(mock_show):
     plotter(mock_historical_data)
     mock_show.assert_called_once()
 
-if "__name__" == "__main__":
+if __name__ == "__main__":
     pytest.main()
