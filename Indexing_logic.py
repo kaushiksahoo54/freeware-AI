@@ -1,14 +1,9 @@
 #!/usr/bin/env python
 # coding: utf-8
-
-# In[3]:
-
-
 import time
 import pandas as pd
 import yfinance as yf
 from datetime import datetime, timedelta
-from bs4 import BeautifulSoup
 import requests
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -18,14 +13,10 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
 
-
-# In[4]:
-
-
 # Initialize WebDriver
 driver = webdriver.Chrome()
 
-stock_symbol = 'SENCO'
+stock_symbol = 'RVNL'
 # Navigate to the webpage
 driver.get(f"https://www.screener.in/company/{stock_symbol}/consolidated/#peers")
 
@@ -50,10 +41,3 @@ print(df)
 
 # Close the browser
 driver.quit()
-
-
-# In[ ]:
-
-
-
-
