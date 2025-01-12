@@ -46,8 +46,8 @@ def plotter(diary: pd.DataFrame):
         diary (pd.Dataframe): stocks to be plotted.
 
         """
-        plt.figure(figsize=(12, 6))
-        plt.plot(diary.index, diary['Close'], label='Close', color='blue')
+        #plt.figure(figsize=(12, 6))
+        #plt.plot(diary.index, diary['Close'], label='Close', color='blue')
         plt.plot(diary.index, diary['SMA_20'], label='20-Day SMA', color='orange')
         plt.plot(diary.index, diary['Upper_Band'], label='Upper Bollinger Band', color='green', linestyle='--')
         plt.plot(diary.index, diary['Lower_Band'], label='Lower Bollinger Band', color='red', linestyle='--')
@@ -60,9 +60,9 @@ def plotter(diary: pd.DataFrame):
         plt.grid(True)
         plt.xticks(rotation=45)
         plt.tight_layout()
-        plt.show()
+        #plt.show()
 
-def main():
+def p_main():
     real_time_data = get_realtime_data(stock_symbol)
     print("Real-Time Data:\n", real_time_data)
 
@@ -83,3 +83,6 @@ def main():
     # Calculate the Bollinger Bands
     if str.lower(config["plotter"]) == 'active':
         plotter(historical_data)
+if __name__ == "__main__":
+    p_main()
+    plt.show()

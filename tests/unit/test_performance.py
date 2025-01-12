@@ -5,7 +5,7 @@ from unittest.mock import patch, MagicMock
 import pandas as pd
 import sys
 sys.path.append("././")
-from utils.performance import get_realtime_data, get_historical_data, plotter
+from utils.Bollinger import get_realtime_data, get_historical_data, plotter
 
 # Mock data for testing
 mock_realtime_data = pd.DataFrame({
